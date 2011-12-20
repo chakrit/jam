@@ -1,0 +1,16 @@
+{
+  "author": "Chakrit Wichian <service@chakrit.net> (http://chakrit.net)",
+  "name": "jam",
+  "description": "JAM is a helper function for qqquickly chaining multiple continuations together. Focus on minimal chaining effort.",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/chakrit/jam.git"
+  },
+  "main": "jam",
+  "engines": {
+    "node": "~0.6.6"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
