@@ -1,4 +1,4 @@
-JAM
+npm install jam 
 ---
 
 JAM it together like `this`:
