@@ -7,12 +7,13 @@
   
   jam(function() {
     jam(function() {
-      jam(function() { util.log("JAM! THREE"); this(); })
-        (function() { util.log("JAM! FOUR"); this(); })
-        (function() { util.log("JAM! FIVE"); this(); });
+      jam(function() { util.log("JAM! ONE"); this(); }) 
+        (function() { util.log("JAM! TWO"); this(); })
+        (function() { util.log("JAM! THREE"); setTimeout(this, 3000); })
+        (this);
     })
-    (function() { util.log("JAM! ONE"); this(); })
-    (function() { util.log("JAM! TWO"); this(); });
+    (function() { util.log("JAM! FOUR"); this(); })
+    (function() { util.log("JAM! FIVE"); this(); });
   });
 
 })();

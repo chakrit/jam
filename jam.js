@@ -21,7 +21,7 @@
 
       // delay kickoff until user finished adding functions.
       clearTimeout(execTimeout);
-      setTimeout(execOne, 0);
+      execTimeout = setTimeout(execOne, 0);
       return queueOne;
     };
 
