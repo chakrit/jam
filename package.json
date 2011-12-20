@@ -1,7 +1,7 @@
 {
   "author": "Chakrit Wichian <service@chakrit.net> (http://chakrit.net)",
   "name": "jam",
-  "description": "JAM is a helper function for qqquickly chaining multiple continuations together. Focus on minimal chaining effort.",
+  "description": "JAM is (yet another) helper function for q.q.quickly chaining multiple continuations. JAM is like a stripped-down bare-essentials version of flow-js with a slightly different syntax that's more suitable for simple one-line functions and doesn't require so much parentheses balancing.",
   "version": "0.1.0",
   "repository": {
     "type": "git",
