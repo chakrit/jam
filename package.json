@@ -9,7 +9,7 @@
   },
   "main": "jam",
   "engines": {
-    "node": "~0.6.6"
+    "node": ">= 0.4.7"
   },
   "dependencies": {},
   "devDependencies": {}
