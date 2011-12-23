@@ -2,7 +2,7 @@
   "author": "Chakrit Wichian <service@chakrit.net> (http://chakrit.net)",
   "name": "jam",
   "description": "JAM is (yet another) helper function for q.q.quickly chaining multiple continuations with a monadic twist so the chain itself can be returned and passed around.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/chakrit/jam.git"

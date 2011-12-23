@@ -39,6 +39,18 @@
       });
     };
 
+    queueOne.call = function() {
+      var args = Array.prototype.slice.apply(arguments)
+        , func = args.shift()
+        , me = this; // save current scope
+
+      // supply callback as last argument per node convention
+      return queueOne(function() {
+        args.push(this); // TODO: we know the value of `this` beforehand?
+        func.apply(me, args); // apply function with original scope
+      });
+    };
+
     queueOne.map = function(mapper) {
       return queueOne(function() { this(mapper.apply(null, arguments)); });
     };
@@ -53,14 +65,15 @@
 
   // wire queueOne utility methods into the JAM objects
   // so it also works on first jam() invocation
+  // TODO: Make queueOne the canonical function and eliminate this
   // i.e. JAM.return() 
-  var utils = ['return', 'do', 'map'];
-  for (var i in utils) (function(util) {
+  var tmp = JAM(JAM.id);
+  for (var util in tmp) (function(util) {
+    console.log('Wiring util: ' + util);
     JAM[util] = function() {
       return JAM(JAM.id)[util].apply(null, arguments);
     };
-  })(utils[i]);
-
+  })(util);
 
   module.exports = JAM;
 
