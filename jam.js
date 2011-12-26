@@ -69,7 +69,6 @@
   // i.e. JAM.return() 
   var tmp = JAM(JAM.id);
   for (var util in tmp) (function(util) {
-    console.log('Wiring util: ' + util);
     JAM[util] = function() {
       return JAM(JAM.id)[util].apply(null, arguments);
     };
