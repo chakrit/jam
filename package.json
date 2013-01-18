@@ -19,5 +19,9 @@
   ],
   "author": "Chakrit Wichian <service@chakrit.net> (http://chakrit.net)",
   "license": "BSD",
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "directories": {
+    "test": "test",
+    "lib": "lib"
+  }
 }
