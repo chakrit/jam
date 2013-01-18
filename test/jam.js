@@ -1,23 +1,13 @@
 
-// test-jam.js - Test deferred JAMs
+// test.js - test that JAM works
 (function() {
 
-  var J = require('../index')
+  var jam = require('../index')
     , util = require('util');
 
-  function vendJams(howMany) {
-    var jam = J(function() { util.log('Out of JAMs!'); this(); });
-
-    for (var i = howMany; i > 0; i--) (function(i) {
-      jam = jam(function() {
-        util.log('' + i + ' JAM(s) left!');
-        setTimeout(this, 1000);
-      });
-    })(i);
-
-    jam = jam(function() { util.log('No more JAMs left!'); this(); });
-  }
-
-  vendJams(5);
-
+  jam(function(_) { console.log('one'); this('two'); })
+    (function(x) { console.log(x); this(); })
+    (function() { console.log('three'); this('fo', 'ur'); })
+    (function(y, z) { console.log(y + z); this(); });
+    
 })();

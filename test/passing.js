@@ -20,10 +20,10 @@
   }
 
   // sandwich making instructions
-  var growWheat = instruct(3000, 'growing wheats...')
-    , makeBread = instruct(1000, 'making breads...')
-    , sliceBread = instruct(500, 'slicing breads...')
-    , pasteJams = instruct(2000, 'pasting jams...')
+  var growWheat = instruct(300, 'growing wheats...')
+    , makeBread = instruct(100, 'making breads...')
+    , sliceBread = instruct(50, 'slicing breads...')
+    , pasteJams = instruct(200, 'pasting jams...')
     , coupleEm = instruct(200, 'couple em together...');
 
   var sandwich = J;

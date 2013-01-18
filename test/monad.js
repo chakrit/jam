@@ -5,7 +5,7 @@
   function slowAdd(x, y, callback) {
     setTimeout(function() {
       callback(x + y);
-    }, 3000);
+    }, 300);
   }
 
   require('../index')
