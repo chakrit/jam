@@ -23,5 +23,8 @@
   "directories": {
     "test": "test",
     "lib": "lib"
+  },
+  "devDependencies": {
+    "istanbul": "~0.1.27"
   }
 }
