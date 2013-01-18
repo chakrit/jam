@@ -4,7 +4,7 @@
   "description": "JAM asynchronous functions together *quickly* with a twist!",
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "./test.sh"
   },
   "repository": {
     "type": "git",
