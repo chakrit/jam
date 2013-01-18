@@ -22,8 +22,6 @@
       queue.push(next);
 
       // delay kickoff until user finished adding functions.
-      clearTimeout(execTimeout);
-      execTimeout = setTimeout(execOne, 0);
       return queueOne;
     };
 
@@ -56,7 +54,7 @@
     };
 
     // kickoff the JAM chain
-    execTimeout = setTimeout(execOne, 0);
+    process.nextTick(execOne);
     return queueOne;
   };
 
