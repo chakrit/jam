@@ -2,7 +2,7 @@
 // test-multi.js - Test multiple nested JAMs
 (function() {
 
-  var jam = require('./jam')
+  var jam = require('../index')
     , util = require('util');
   
   jam(function() {

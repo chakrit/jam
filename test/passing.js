@@ -2,7 +2,7 @@
 // test-passing.js - Test passing JAMs around
 (function() {
 
-  var J = require('./jam')
+  var J = require('../index')
     , util = require('util');
 
   function instruct(time, txt) { return function(jam) { 

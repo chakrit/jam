@@ -8,7 +8,7 @@
     }, 3000);
   }
 
-  require('./jam')
+  require('../index')
     .return(['h', 'e', 'l', 'l', 'o', ' ', '!'])
     .map(function(arr) {
       var str = "";

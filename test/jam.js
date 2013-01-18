@@ -2,7 +2,7 @@
 // test-jam.js - Test deferred JAMs
 (function() {
 
-  var J = require('./jam')
+  var J = require('../index')
     , util = require('util');
 
   function vendJams(howMany) {
