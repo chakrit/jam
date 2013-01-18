@@ -1,6 +1,6 @@
 {
   "name": "jam",
-  "version": "0.2.3",
+  "version": "0.2.3-1",
   "description": "JAM asynchronous functions together *quickly* with a twist!",
   "main": "index.js",
   "scripts": {
