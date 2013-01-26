@@ -1,10 +1,10 @@
 {
   "name": "jam",
-  "version": "0.2.3-1",
-  "description": "JAM asynchronous functions together *quickly* with a twist!",
+  "version": "0.3.0-0",
+  "description": "JAM your async chains together *faster*",
   "main": "index.js",
   "scripts": {
-    "test": "./test.sh"
+    "test": "make test"
   },
   "repository": {
     "type": "git",
@@ -23,8 +23,5 @@
   "directories": {
     "test": "test",
     "lib": "lib"
-  },
-  "devDependencies": {
-    "istanbul": "~0.1.27"
   }
 }
