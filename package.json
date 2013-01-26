@@ -23,5 +23,11 @@
   "directories": {
     "test": "test",
     "lib": "lib"
+  },
+  "devDependencies": {
+    "istanbul": "~0.1.27",
+    "mocha-istanbul": "~0.1.0",
+    "mocha": "~1.8.1",
+    "plato": "~0.4.3"
   }
 }
