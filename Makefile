@@ -6,7 +6,7 @@ TEST_ENV := test
 
 # Project files definition
 TEST_FILES := $(wildcard test/**/*.js) $(wildcard test/*.js)
-LIB_FILES := $(SRC_FILES:src/%.coffee=lib/%.js)
+LIB_FILES := $(wildcard lib/**/*.js) $(wildcard lib/*.js)
 COV_FILES := $(LIB_FILES:lib/%.js=lib-cov/%.js)
 
 INDEX_FILE = index.js
@@ -25,13 +25,13 @@ ISTANBUL_OPTS = instrument --variable global.__coverage__ --no-compact
 PLATO_OPTS = -d html-report/
 
 
-default: node_modules all
+default: node_modules
 
 node_modules:
 	npm install
 
 # File transformations
-lib-cov/%.js: node_modules lib/%.js
+lib-cov/%.js: lib/%.js
 	@mkdir -p $(@D)
 	$(BIN)/istanbul $(ISTANBUL_OPTS) --output $@ $<
 
@@ -44,12 +44,12 @@ tdd: node_modules
 
 
 # Code instrumentation
-instrument: $(COV_FILES)
+instrument: node_modules $(COV_FILES)
 
 cover: instrument
 	NODE_ENV=$(TEST_ENV) COVER=1 $(BIN)/mocha $(MOCHA_COVER_OPTS) $(TEST_FILES)
 
-complex: all
+complex:
 	$(BIN)/plato $(PLATO_OPTS) $(LIB_FILES)
 
 
@@ -59,5 +59,5 @@ clean:
 	-rm -Rf html-report/
 
 
-.PHONY: debug default all test tdd clean instrument cover complex
+.PHONY: debug default test tdd clean instrument cover complex
 
