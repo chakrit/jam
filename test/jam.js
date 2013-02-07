@@ -5,9 +5,7 @@
   var assert = require('chai').assert
     , stub = require('sinon').stub;
 
-  function agent() {
-    return stub().callsArg(0);
-  }
+  function agent() { return stub().callsArg(0); }
 
   describe('JAM', function() {
     before(function() { this.jam = require('../index'); });
@@ -50,41 +48,31 @@
           done();
         });
       });
-    }); // function
 
-    describe('utility functions', function() {
-      describe('.identity', function() {
-        it('should be exported', function() {
-          assert.typeOf(this.jam.identity, 'function');
-        });
+      it('should pass error to the last function in the chain if error is given to `next`', function(done) {
+        var e = new Error('test');
 
-        it('should calls the next function without any args', function(done) {
-          this.jam.identity(function() {
-            assert.lengthOf(arguments, 0);
+        this.jam(function(next) { next(e); })
+          (function(next) { done(new Error('This function should *not* run.')); })
+          (function(e_) {
+            assert.equal(e, e_);
             done();
           });
-        });
-
-        it('should works when used in chain', function(done) {
-          this.jam(this.jam.identity)(done);
-        });
       });
-    }); // utility functions
 
-    describe.skip('helper', function() {
-      describe('.map', function() {
-        it('should be exported', function() {
-          assert.typeOf(this.jam.map, 'function');
-        });
-
-        it('should calls iterator for each element in array', function(done) {
-          var items = [1, 2, 3]
-            , counter = 1;
-
-          //this.jam.map(items,
-        });
+      it('should pass arguments to chained function if non-error arguments given to `next`', function(done) {
+        this.jam(function(next) { next(null, 'one'); })
+          (function(next, arg) { assert.equal(arg, 'one'); next(); })
+          (function(next) { next(null, 'two', 'three'); })
+          (function(next, arg0, arg1) {
+            assert.equal(arg0, 'two');
+            assert.equal(arg1, 'three');
+            next();
+          })
+          (done);
       });
-    }); // helpers
+
+    }); // function
 
   });
 
