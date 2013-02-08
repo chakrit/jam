@@ -25,8 +25,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "type": "heading",
           "data": {
             "level": 1,
-            "title": "ARGUMENTS HELPERS",
-            "slug": "arguments-helpers"
+            "title": "INTERNAL HELPERS",
+            "slug": "internal-helpers"
           },
           "depth": 1
         }, {
@@ -68,6 +68,14 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 "level": 2,
                 "title": "jam.call( function, [args...] )",
                 "slug": "jamcall-function-args-"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "jam.map( array, iterator( next, element, index ) )",
+                "slug": "jammap-array-iterator-next-element-index--"
               },
               "depth": 2
             }
