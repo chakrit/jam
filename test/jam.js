@@ -5,7 +5,12 @@
   var assert = require('chai').assert
     , stub = require('sinon').stub;
 
+
+  var NON_FUNCTIONS = [undefined, null, 123, 'string'];
+
   function agent() { return stub().callsArg(0); }
+  function ident(next) { if (typeof next === 'function') return next(); }
+
 
   describe('JAM', function() {
     before(function() { this.jam = require('../index'); });
@@ -17,6 +22,20 @@
     }); // module
 
     describe('function', function() {
+      it('should throws if given something that is not a function', function() {
+        var me = this;
+        NON_FUNCTIONS.forEach(function(thing) {
+          assert.throws(function() { me.jam(thing); }, /function/i);
+        });
+      });
+
+      it('should throws if given something as a chain continuation that is not a function', function() {
+        var me = this;
+        NON_FUNCTIONS.forEach(function(thing) {
+          assert.throws(function() { me.jam(ident)(thing); }, /function/i);
+        });
+      });
+
       it('should runs the supplied function', function(done) {
         this.jam(done);
       });

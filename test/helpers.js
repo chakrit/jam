@@ -5,6 +5,9 @@
   var assert = require('chai').assert
     , stub = require('sinon').stub;
 
+  var NON_FUNCTIONS = [undefined, null, 123, 'string']
+    , NON_ARRAYS = [undefined, null, 123, { }, function() { }];
+
 
   describe('Helpers', function() {
     before(function() { this.jam = require('../index'); });
@@ -72,7 +75,7 @@
       it('should throws if function argument missing or not a function', function() {
         var me = this;
 
-        [undefined, null, 123, 'string'].forEach(function(thing) {
+        NON_FUNCTIONS.forEach(function(thing) {
           assert.throws(function() { me.jam.call(thing); }, /func/i);
         });
       });
@@ -100,6 +103,52 @@
           (done);
       });
     }); // .call
+
+    describe('.map function', function() {
+      it('should be exported', function() {
+        assert.typeOf(this.jam.map, 'function');
+      });
+
+      it('should throws if array argument missing or not an array', function() {
+        var me = this;
+        NON_ARRAYS.forEach(function(thing) {
+          assert.throws(function() { me.jam.map(thing); }, /array/i);
+        });
+      });
+
+      it('should throws if iterator argument missing or not a function', function() {
+        var me = this;
+        NON_FUNCTIONS.forEach(function(thing) {
+          assert.throws(function() { me.jam.map([1,2,3], thing); }, /iterator/i);
+        });
+      });
+
+      it('should calls iterator for each element in the given array serially', function(done) {
+        var elements = ['one', 'two', 'three']
+          , index = 0;
+
+        this.jam(this.jam.map(elements, function(next, element, index_) {
+          assert.equal(index_, index);
+          assert.equal(element, elements[index]);
+          index++;
+          next();
+        }))(done);
+      });
+
+      it('should forwards error properly when an iterator calls `next()` with an Error`', function(done) {
+        var err = new Error('test error')
+          , elements = ['one', 'two', 'three']
+          , index = 0;
+
+        this.jam(this.jam.map(elements, function(next, element, index_) {
+          next((index_ < 2) ? undefined : err); // throw on last element
+
+        }))(function(e) {
+          assert.equal(e, err); // should be forwarded here
+          done();
+        });
+      });
+    }); // .map
 
   });
 
