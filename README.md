@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/chakrit/jam.png?branch=master)](https://travis-ci.org/chakrit/jam)
+
 # JAM JAM JAM
 
 ```sh
