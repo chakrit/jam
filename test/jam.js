@@ -68,6 +68,15 @@
         });
       });
 
+      it('should not pass error to the last function in the chain if arguments were given to last `next` call', function(done) {
+        this.jam(function(next) { next(null, 'one', 'two', 'three'); })
+          (function(e) {
+            // 'one' may accidentally be passed due to an arguments shifting bug
+            assert.ok(!e);
+            done();
+          });
+      });
+
       it('should pass error to the last function in the chain if error is given to `next`', function(done) {
         var e = new Error('test');
 
