@@ -162,6 +162,26 @@ Additionally, any arguments that would normally be given to the chain function w
 used to call the function instead (`next()` is then added at the end of the arguments
 list).
 
+#### map( array, iterator( next, element, index ) )
+
+```js
+var FILES = 'file1.txt,file2.txt,file3.txt'.split(',')
+  , cat = '';
+
+jam(jam.map(FILES, function(next, file) {
+  fs.readFile(file, function(e, fileContent) {
+    cat += fileContent
+    next();
+  });
+
+})(function(e) { console.log(cat); });
+```
+
+Runs the `iterator` for each element in the array. The `iterator` is given its own version
+of `next()` and the element to process.
+
+Internally a new JAM chain is built and a chain step is added for each element.
+
 # LICENSE
 
 BSD
@@ -177,7 +197,7 @@ you find or if you just had a question.
 
 * Binded calls. Something like `jam.method(object, 'func')` that works like `jam.call`.
 * Nullify calls, in case you don't want any arguments passed.
-* map() helpers for working with arrays.
+* Parellel map() ?
 
 # WHY ?
 
