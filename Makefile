@@ -55,13 +55,22 @@ complex:
 doc:
 	$(BIN)/groc $(GROC_OPTS) $(LIB_FILES)
 doc-gh:
-	$(BIN)/groc $(GROC_OPTS) --github $(LIB_FILES)
+	git clone git@github.com:chakrit/jam.git -b gh-pages doc/
+	$(BIN)/groc $(GROC_OPTS) $(LIB_FILES)
+	cd doc
+	git checkout gh-pages
+	git add .
+	git commit -am "Doc update $(shell date -u)"
+	git push gh-pages:gh-pages
+	cd ..
+	-rm -Rf doc/
 
 
 # Cleans
 clean:
 	-rm -Rf lib-cov/
 	-rm -Rf html-report/
+	-rm -Rf doc/
 
 
 .PHONY: debug default test tdd clean doc doc-gh instrument cover complex
