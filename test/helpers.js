@@ -5,8 +5,9 @@
   var assert = require('chai').assert
     , stub = require('sinon').stub;
 
-  var NON_FUNCTIONS = [undefined, null, 123, 'string']
-    , NON_ARRAYS = [undefined, null, 123, { }, function() { }];
+  var NON_FUNCTIONS = [undefined, null, 123, 'string', { }, []]
+    , NON_ARRAYS = [undefined, null, 123, 'string', { }, function() { }]
+    , NON_NUMS = [undefined, null, 'string', { }, function() { }, []];
 
 
   describe('Helpers', function() {
@@ -149,6 +150,33 @@
         });
       });
     }); // .map
+
+    describe('.timeout function', function() {
+      it('should be exported', function() {
+        assert.typeOf(this.jam.timeout, 'function');
+      });
+
+      it('should throws if timeout argument missing or not a number', function() {
+        var me = this;
+
+        NON_NUMS.forEach(function(thing) {
+          assert.throws(function() { me.jam.timeout(thing); }, /timeout/i);
+        });
+      });
+
+      it('should calls the next function after the specified timeout', function(done) {
+        this.jam(this.jam.timeout(1))(done);
+      });
+
+      it('should forwards arguments to `next()` from previous function', function(done) {
+        this.jam(this.jam.return('hello'))
+          (this.jam.timeout(1))
+          (function(e, hello) {
+            assert(hello === 'hello');
+            done()
+          });
+      });
+    });
 
   });
 
