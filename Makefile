@@ -48,7 +48,7 @@ tdd: node_modules
 # Code instrumentation
 instrument: node_modules $(COV_FILES)
 cover: instrument
-	NODE_ENV=$(TEST_ENV) COVER=1 $(BIN)/mocha $(MOCHA_COVER_OPTS) $(TEST_FILES)
+	NODE_ENV=$(TEST_ENV) JAM_COVER=1 $(BIN)/mocha $(MOCHA_COVER_OPTS) $(TEST_FILES)
 complex:
 	$(BIN)/plato $(PLATO_OPTS) $(LIB_FILES)
 
