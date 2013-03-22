@@ -112,6 +112,8 @@ jam(function first(next) { next('one'); })
 ```
 
 Passes arguments it receives to the next function in the chain without any modification.
+Also useful as a starting point when building a complex jam chain (i.e. in a for loops
+that re-uses the jam return values.)
 
 See `nextTick()` below.
 
