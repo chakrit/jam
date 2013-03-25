@@ -1,5 +1,5 @@
 
-// test/test-identity.js - Test identity function.
+// test/helpers.js - Test JAM helper functions
 (function() {
 
   var assert = require('chai').assert
