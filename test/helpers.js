@@ -10,6 +10,22 @@
     , NON_NUMS = [undefined, null, 'string', { }, function() { }, []];
 
 
+  // functions with multiple usage modes
+  describeModes = function(modes, tests) {
+    for (var mode in modes) (function(mode, code) {
+      describe(mode, function() {
+        before(function() {
+          this.factory = new Function('return ' + code + ';')
+        });
+
+        after(function() { delete this.factory; });
+
+        tests()
+      });
+    })(mode, modes[mode]);
+  };
+
+
   describe('Helpers', function() {
     before(function() { this.jam = require('../index'); });
 
@@ -25,30 +41,28 @@
         assert.typeOf(this.jam.identity, 'function');
       });
 
-      describeForm = function(name, factory) {
-        describe(name, function() {
-          it('should calls the next function without any args when used standalone', function(done) {
-            this.jam(eval(factory))
-              (function(next) { assert.lengthOf(arguments, 1); next(); })
-              (done);
-          });
+      var MODES =
+        { 'normal form'  : 'this.jam.identity'
+        , 'invoked form' : 'this.jam.identity()' };
 
-          // TODO: What's the point of this anyway?
-          it('should pass all the args to the next function when used in chain', function(done) {
-            this.jam(function(next) { next(null, 'one', 'two'); })
-              (eval(factory))
-              (function(next, arg0, arg1) {
-                assert.equal(arg0, 'one');
-                assert.equal(arg1, 'two');
-                next();
-              })
-              (done);
-          });
+      describeModes(MODES, function() {
+        it('should calls the next function without any args when used standalone', function(done) {
+          this.jam(this.factory())
+            (function(next) { assert.lengthOf(arguments, 1); next(); })
+            (done);
         });
-      };
 
-      describeForm('normal form', 'this.jam.identity');
-      describeForm('invoked form', 'this.jam.identity()');
+        it('should pass all the args to the next function when used in chain', function(done) {
+          this.jam(function(next) { next(null, 'one', 'two'); })
+            (this.factory())
+            (function(next, arg0, arg1) {
+              assert.equal(arg0, 'one');
+              assert.equal(arg1, 'two');
+              next();
+            })
+            (done);
+        });
+      });
 
     }); // .identity
 
