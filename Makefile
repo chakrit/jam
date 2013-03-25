@@ -19,7 +19,7 @@ TDD_REPORTER = min
 COVER_REPORTER = mocha-istanbul
 
 # Command-line tools options
-MOCHA_OPTS = --timeout $(TEST_TIMEOUT) --reporter $(TEST_REPORTER) --globals $(GLOBALS)
+MOCHA_OPTS = --bail --timeout $(TEST_TIMEOUT) --reporter $(TEST_REPORTER) --globals $(GLOBALS)
 MOCHA_TDD_OPTS = $(MOCHA_OPTS) --watch --reporter $(TDD_REPORTER)
 MOCHA_COVER_OPTS = $(MOCHA_OPTS) --reporter $(COVER_REPORTER)
 ISTANBUL_OPTS = instrument --variable global.__coverage__ --no-compact
