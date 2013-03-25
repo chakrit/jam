@@ -82,6 +82,28 @@
       });
     }); // .return
 
+    describe('.null function', function() {
+      it('should be exported', function() {
+        assert.typeOf(this.jam.null, 'function');
+      });
+
+      var MODES =
+        { 'normal form'  : 'this.jam.null'
+        , 'invoked form' : 'this.jam.null()' };
+
+      describeModes(MODES, function() {
+        it('should calls the next function in the chain with no arguments', function(done) {
+          this.jam(function(next) { next(null, 1, 2, 3); })
+            (this.factory())
+            (function(next, arg) {
+              assert.isUndefined(arg);
+              next();
+            })
+            (done);
+        });
+      });
+    }); // .null
+
     describe('.call function', function() {
       it('should be exported', function() {
         assert.typeOf(this.jam.call, 'function');
