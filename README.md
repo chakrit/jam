@@ -91,6 +91,18 @@ code dependent on the number of arguments given.
 Passing `next` as first argument eliminates the dependency since you can bind as many
 arguments as you want and the `next()` is still passed as first argument always.
 
+Since this pattern allows you to pass functions verbatim, JAM also helps you binds the
+funciton context as well if you supply the context object as the second argument:
+
+```js
+var myObj =
+  { text: 'HELLO'
+  , echo: function() { console.log(this.text); }
+  };
+
+jam(myObj.echo, myObj); // executes myObj.echo with this === myObj
+```
+
 Additionally, there are helpers available that lets you build JAM chains more easily.
 
 # HELPERS

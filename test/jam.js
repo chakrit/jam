@@ -100,6 +100,19 @@
           (done);
       });
 
+      it('should calls initial function with `this` bound to supplied context object', function(done) {
+        this.jam(function(next) {
+          assert.equal(this, assert);
+          next()
+        }, assert)(done);
+      });
+
+      it('should calls chained function with `this` bound to supplied context object', function(done) {
+        this.jam(function(next) { next(); })
+          (function(next) { assert.equal(this, assert); next() }, assert)
+          (done);
+      });
+
     }); // function
 
   });
