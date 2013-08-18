@@ -66,6 +66,14 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 2,
+                "title": "jam.null()",
+                "slug": "jamnull"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
                 "title": "jam.call( function, [args...] )",
                 "slug": "jamcall-function-args-"
               },
@@ -74,8 +82,24 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 2,
+                "title": "jam.each( array, iterator( next, element, index ) )",
+                "slug": "jameach-array-iterator-next-element-index--"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
                 "title": "jam.map( array, iterator( next, element, index ) )",
                 "slug": "jammap-array-iterator-next-element-index--"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "jam.timeout( timeout )",
+                "slug": "jamtimeout-timeout-"
               },
               "depth": 2
             }
