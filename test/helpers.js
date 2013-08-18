@@ -9,6 +9,8 @@
     , NON_ARRAYS = [undefined, null, 123, 'string', { }, function() { }]
     , NON_NUMS = [undefined, null, 'string', { }, function() { }, []];
 
+  var ITERABLES = ['each', 'map'];
+
 
   // functions with multiple usage modes
   describeModes = function(modes, tests) {
@@ -141,52 +143,6 @@
       });
     }); // .call
 
-    describe('.map function', function() {
-      it('should be exported', function() {
-        assert.typeOf(this.jam.map, 'function');
-      });
-
-      it('should throws if array argument missing or not an array', function() {
-        var me = this;
-        NON_ARRAYS.forEach(function(thing) {
-          assert.throws(function() { me.jam.map(thing); }, /array/i);
-        });
-      });
-
-      it('should throws if iterator argument missing or not a function', function() {
-        var me = this;
-        NON_FUNCTIONS.forEach(function(thing) {
-          assert.throws(function() { me.jam.map([1,2,3], thing); }, /iterator/i);
-        });
-      });
-
-      it('should calls iterator for each element in the given array serially', function(done) {
-        var elements = ['one', 'two', 'three']
-          , index = 0;
-
-        this.jam(this.jam.map(elements, function(next, element, index_) {
-          assert.equal(index_, index);
-          assert.equal(element, elements[index]);
-          index++;
-          next();
-        }))(done);
-      });
-
-      it('should forwards error properly when an iterator calls `next()` with an Error`', function(done) {
-        var err = new Error('test error')
-          , elements = ['one', 'two', 'three']
-          , index = 0;
-
-        this.jam(this.jam.map(elements, function(next, element, index_) {
-          next((index_ < 2) ? undefined : err); // throw on last element
-
-        }))(function(e) {
-          assert.equal(e, err); // should be forwarded here
-          done();
-        });
-      });
-    }); // .map
-
     describe('.timeout function', function() {
       it('should be exported', function() {
         assert.typeOf(this.jam.timeout, 'function');
@@ -211,6 +167,73 @@
             assert(hello === 'hello');
             done()
           });
+      });
+    });
+
+    describe('iterable functions', function() {
+      ITERABLES.forEach(function(func) {
+
+        describe('.' + func + ' function', function() {
+          it('should be exproted', function() {
+            assert.typeOf(this.jam[func], 'function');
+          });
+
+          it('should throws if array argument missing or not an array', function() {
+            var me = this;
+            NON_ARRAYS.forEach(function(thing) {
+              assert.throws(function() { me.jam[func](thing); }, /array/i);
+            });
+          });
+        });
+
+        it('should throws if iterator argument missing or not a function', function() {
+          var me = this;
+          NON_FUNCTIONS.forEach(function(thing) {
+            assert.throws(function() { me.jam[func]([1,2,3], thing); }, /iterator/i);
+          });
+        });
+
+        it('should calls iterator for each element in the given array serially', function(done) {
+          var elements = ['one', 'two', 'three']
+            , index = 0;
+
+          this.jam(this.jam[func](elements, function(next, element, index_) {
+            assert.equal(index_, index);
+            assert.equal(element, elements[index]);
+            index++;
+            next();
+          }))(done);
+        });
+
+        it('should forwards error properly when an iterator calls `next()` with an Error`', function(done) {
+          var err = new Error('test error')
+            , elements = ['one', 'two', 'three']
+            , index = 0;
+
+          this.jam(this.jam[func](elements, function(next, element, index_) {
+            next((index_ < 2) ? undefined : err); // throw on last element
+
+          }))(function(e) {
+            assert.equal(e, err); // should be forwarded here
+            done();
+          });
+        });
+
+      });
+    }); // iterables
+
+    describe('.map function', function() {
+      it('should also returns collected results passed to next()', function(done) {
+        var elements = [1, 2, 3];
+
+        this.jam(this.jam.map(elements, function(next, element, index) {
+          return next(null, element * 2);
+        }))(function(next, result) {
+          for (var i = 0; i < elements.length; i++) {
+            assert.equal(elements[i] * 2, result[i]);
+          }
+          next()
+        })(done);
       });
     });
 
