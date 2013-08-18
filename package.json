@@ -25,12 +25,12 @@
     "lib": "lib"
   },
   "devDependencies": {
-    "istanbul": "~0.1.27",
-    "mocha-istanbul": "~0.1.0",
-    "mocha": "~1.8.1",
-    "plato": "~0.4.3",
-    "chai": "~1.4.2",
-    "sinon": "~1.5.2",
-    "groc": "~0.3.2"
+    "istanbul": "~0.1.43",
+    "mocha-istanbul": "~0.2.0",
+    "mocha": "~1.12.0",
+    "plato": "~0.6.1",
+    "chai": "~1.7.2",
+    "sinon": "~1.7.3",
+    "groc": "~0.4.0"
   }
 }
