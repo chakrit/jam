@@ -5,8 +5,9 @@
   var assert = require('chai').assert
     , stub = require('sinon').stub;
 
-  var NON_FUNCTIONS = [undefined, null, 123, 'string', { }, []]
-    , NON_ARRAYS = [undefined, null, 123, 'string', { }, function() { }]
+  var NON_ARR_OR_FUNCS = [undefined, null, 123, 'string', { }]
+    , NON_FUNCTIONS = NON_ARR_OR_FUNCS.concat([[]])
+    , NON_ARRAYS = NON_ARR_OR_FUNCS.concat([function() { }])
     , NON_NUMS = [undefined, null, 'string', { }, function() { }, []];
 
   var ITERABLES = ['each', 'map'];
@@ -15,11 +16,10 @@
   // functions with multiple usage modes
   describeModes = function(modes, tests) {
     for (var mode in modes) (function(mode, code) {
-      describe(mode, function() {
-        before(function() {
-          this.factory = new Function('return ' + code + ';')
-        });
+      var factory = new Function('return ' + code + ';');
 
+      describe(mode, function() {
+        before(function() { this.factory = factory; });
         after(function() { delete this.factory; });
 
         tests()
@@ -171,59 +171,88 @@
     });
 
     describe('iterable functions', function() {
-      ITERABLES.forEach(function(func) {
 
+      ITERABLES.forEach(function(func) {
         describe('.' + func + ' function', function() {
-          it('should be exproted', function() {
+          it('should be exported', function() {
             assert.typeOf(this.jam[func], 'function');
           });
 
-          it('should throws if array argument missing or not an array', function() {
+          it('should throws if array argument not an array or function', function() {
             var me = this;
-            NON_ARRAYS.forEach(function(thing) {
+            NON_ARR_OR_FUNCS.forEach(function(thing) {
               assert.throws(function() { me.jam[func](thing); }, /array/i);
             });
           });
-        });
 
-        it('should throws if iterator argument missing or not a function', function() {
-          var me = this;
-          NON_FUNCTIONS.forEach(function(thing) {
-            assert.throws(function() { me.jam[func]([1,2,3], thing); }, /iterator/i);
+          it('should throws if iterator argument missing or not a function', function() {
+            var me = this;
+            NON_FUNCTIONS.forEach(function(thing) {
+              assert.throws(function() { me.jam[func]([1,2,3], thing); }, /iterator/i);
+            });
           });
         });
+      }); // iterables
 
-        it('should calls iterator for each element in the given array serially', function(done) {
-          var elements = ['one', 'two', 'three']
-            , index = 0;
+      var MODES =
+        { 'normal form':
+          'this.jam[arguments[0]].call(this.jam, arguments[2])'
+        , 'invoked form':
+          'this.jam[arguments[0]].call(this.jam, arguments[1], arguments[2])'
+        };
 
-          this.jam(this.jam[func](elements, function(next, element, index_) {
-            assert.equal(index_, index);
-            assert.equal(element, elements[index]);
-            index++;
-            next();
-          }))(done);
-        });
+      describeModes(MODES, function() {
+        ITERABLES.forEach(function(func) {
+          it('should calls iterator for each element in the given array serially', function(done) {
+            var elements = ['one', 'two', 'three']
+              , index = 0;
 
-        it('should forwards error properly when an iterator calls `next()` with an Error`', function(done) {
-          var err = new Error('test error')
-            , elements = ['one', 'two', 'three']
-            , index = 0;
+            var check = function(next, element, index_) {
+              assert.equal(index_, index);
+              assert.equal(element, elements[index]);
+              index++;
+              next()
+            };
 
-          this.jam(this.jam[func](elements, function(next, element, index_) {
-            next((index_ < 2) ? undefined : err); // throw on last element
+            this.jam(this.jam.return(elements))
+              (this.factory(func, elements, check))
+              (done);
+          });
 
-          }))(function(e) {
-            assert.equal(e, err); // should be forwarded here
-            done();
+          it('should forwards error properly when an iterator calls `next()` with an Error`', function(done) {
+            var err = new Error('test error')
+              , elements = ['one', 'two', 'three']
+              , index = 0;
+
+            var err = function(next, element, index_) {
+              next(index_ < 2 ? undefined : err);
+            }
+
+            this.jam(this.jam.return(elements))
+              (this.factory(func, elements, err))
+              (function(e) {
+                assert.equal(e, err); // should be forwarded here
+                done()
+              });
           });
         });
+      }); // describeModes
 
-      });
     }); // iterables
 
+    describe('.each function', function() {
+      it('should pass original array to next() when done', function(done) {
+        var elements = [1, 2, 3];
+
+        this.jam(this.jam.each(elements, this.jam.identity))(function(next, result) {
+          assert.equal(elements, result);
+          next()
+        })(done);
+      });
+    }); // .each
+
     describe('.map function', function() {
-      it('should also returns collected results passed to next()', function(done) {
+      it('should collects iterator result and pass to next()', function(done) {
         var elements = [1, 2, 3];
 
         this.jam(this.jam.map(elements, function(next, element, index) {
@@ -235,7 +264,7 @@
           next()
         })(done);
       });
-    });
+    }); // .map
 
   });
 
