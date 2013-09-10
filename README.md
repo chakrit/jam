@@ -194,9 +194,15 @@ jam(jam.map(FILES, function(next, filename) {
 ```
 
 Runs the `iterator` for each element in the array. The `iterator` is given its own version
-of `next()` and the element to process.
+of `next()` and the element to process. If no array is given, the method assumes that the
+previous step in the chain produce something that looks like an array.
 
 Internally a new JAM chain is built and a chain step is added for each element.
+
+The next step in the JAM chain will receive the original array verbatim, or the
+transformed result in case of `map`.
+
+See the `example/map.js` file for more information.
 
 # LICENSE
 
