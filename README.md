@@ -204,6 +204,33 @@ transformed result in case of `map`.
 
 See the `example/map.js` file for more information.
 
+### promise( chain )
+
+```js
+var chain = jam(jam.identity); // or any existing chain
+fs.readFile('file1.txt', chain.promise()); // adds a step to "wait" for fs.readFile result
+
+chain(function(e, content) {
+  console.log("Content of file1 is:");
+  console.log(content);
+});
+```
+
+Creates and return a special promise-style callback function that is internally bound to
+the JAM chain. This callback accepts the standard node.js callback signature of
+`function(e, args)` and upon calling, will pass any given arguments properly into the
+`next` function in the JAM chain.
+
+This function is useful when you have already started a JAM chain and want to include an
+asynchronous function into the chain but do not want to wrap the initial call into the
+chain as well (so you can create a `.promise()` callback from the chain and pass that
+instead effectively making the chain wait for the callback.)
+
+This function works regardless of wether the callback or the JAM chain is called first and
+will pass arguments and handle errors properly in both cases.
+
+See the `example/promise.js` file for more information.
+
 # LICENSE
 
 BSD
