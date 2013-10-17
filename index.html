@@ -158,6 +158,39 @@ inserting a delay in-between a long jam chain.</p></div></div><div class="code">
         <span class="kd">var</span> <span class="nx">args</span> <span class="o">=</span> <span class="nx">replaceHead</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
         <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">next</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">);</span> <span class="p">},</span> <span class="nx">timeout</span><span class="p">);</span>
       <span class="p">};</span>
+    <span class="p">};</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><h2 id="jampromise-chain-">jam.promise( [chain] )</h2></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>Returns a JAM promise, useful when you are starting an asynchronous call outside of
+the JAM chain itself but wants the callback to call into the chain. In other words,
+this allow you to put a 'waiting point' (aka promise?) into existing JAM chain that
+waits for the initial call to finish and also pass any arguments passed to the
+callback to the next step in the JAM chain as well.</p>
+
+<p>This function will returns a callback that automatically bridges into the JAM
+chain. You can pass the returned callback to any asynchronous function and the JAM
+chain (at the point of calling .promise()) will wait for that asynchronous function
+to finish effectively creating a 'waiting point'.</p>
+
+<p>Additionally, any arguments passed to the callback are forwarded to the next call
+in the JAM chain as well. If errors are passed, then it is fast-forwarded to the
+last handler normally like normal JAM steps.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">func</span><span class="p">.</span><span class="nx">promise</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">chain</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">chain</span> <span class="o">=</span> <span class="k">typeof</span> <span class="nx">chain</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">?</span> <span class="nx">chain</span> <span class="o">:</span> <span class="c1">// chain is supplied</span>
+        <span class="k">typeof</span> <span class="k">this</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">?</span> <span class="k">this</span> <span class="o">:</span> <span class="c1">// called from the chain variable</span>
+        <span class="nx">ensureFunc</span><span class="p">(</span><span class="nx">chain</span><span class="p">,</span> <span class="s1">&#39;chain&#39;</span><span class="p">);</span> <span class="c1">// fails</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">chain</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span> <span class="k">this</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">chain</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="kd">var</span> <span class="nx">args</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">next</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+      <span class="nx">chain</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">next_</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">args</span><span class="p">)</span> <span class="k">return</span> <span class="nx">next_</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">);</span> <span class="c1">// callback already called</span>
+        <span class="nx">next</span> <span class="o">=</span> <span class="nx">next_</span><span class="p">;</span> <span class="c1">// wait for callback</span>
+      <span class="p">});</span>
+
+      <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="k">return</span> <span class="nx">next</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="c1">// chain promise already called</span>
+        <span class="nx">args</span> <span class="o">=</span> <span class="nx">arguments</span><span class="p">;</span> <span class="c1">// wait for chain to call the promise</span>
+      <span class="p">};</span>
     <span class="p">};</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>TODO: noError() ? or absorbError()</p></div></div><div class="code"><div class="wrapper">    <span class="k">return</span> <span class="nx">func</span><span class="p">;</span>
   <span class="p">};</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><hr /></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><h1 id="jam-function">JAM function</h1></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>Exported function starts the asynchronous call chain.</p></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">jam</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">ensureFunc</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="s1">&#39;function&#39;</span><span class="p">);</span>
