@@ -168,7 +168,62 @@
             done()
           });
       });
-    });
+    }); // .timeout
+
+    describe('.promise function', function() {
+      it('should be exported', function() {
+        assert(typeof this.jam === 'function');
+      });
+
+      it('should returns a function', function() {
+        assert(typeof this.jam.promise(this.jam(this.jam.identity)) === 'function');
+      });
+
+      it('should works for simple calls', function(done) {
+        var chain = this.jam(this.jam.identity);
+        var callback = this.jam.promise(chain);
+
+        chain(done);
+        callback();
+      });
+
+      it('should pass callback arguments to the next step in the chain', function(done) {
+        var chain = this.jam(this.jam.identity);
+        var callback = this.jam.promise(chain);
+
+        chain(function(next, arg1, arg2) {
+          assert(arg1 === 'hello');
+          assert(arg2 === 'world');
+          next();
+        })(done);
+
+        callback(null, 'hello', 'world');
+      });
+
+      describe('even if callback finish before the chain', function() {
+        it('should still works with simple calls', function(done) {
+          var chain = this.jam(this.jam.identity);
+          var callback = this.jam.promise(chain);
+
+          callback();
+          chain(done);
+        });
+
+        it('should still pass callback arguments to the next step', function(done) {
+          var chain = this.jam(this.jam.identity);
+          var callback = this.jam.promise(chain);
+
+          callback(null, 'hello', 'world');
+          chain(function(next, arg1, arg2) {
+            assert(arg1 === 'hello');
+            assert(arg2 === 'world');
+            next();
+          })(done);
+        });
+      });
+
+
+    }); // .promise
 
     describe('iterable functions', function() {
 
