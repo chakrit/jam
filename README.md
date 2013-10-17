@@ -233,7 +233,7 @@ See the `example/promise.js` file for more information.
 
 # LICENSE
 
-BSD
+MIT (see LICENSE file for the full text.)
 
 # SUPPORT / CONTRIBUTE
 
