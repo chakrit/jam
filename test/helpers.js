@@ -172,7 +172,7 @@
 
     describe('.promise function', function() {
       it('should be exported', function() {
-        assert(typeof this.jam === 'function');
+        assert.typeOf(this.jam, 'function');
       });
 
       it('should returns a function', function() {
@@ -192,8 +192,8 @@
         var callback = this.jam.promise(chain);
 
         chain(function(next, arg1, arg2) {
-          assert(arg1 === 'hello');
-          assert(arg2 === 'world');
+          assert.equal(arg1, 'hello');
+          assert.equal(arg2, 'world');
           next();
         })(done);
 
@@ -215,14 +215,35 @@
 
           callback(null, 'hello', 'world');
           chain(function(next, arg1, arg2) {
-            assert(arg1 === 'hello');
-            assert(arg2 === 'world');
+            assert.equal(arg1, 'hello');
+            assert.equal(arg2, 'world');
             next();
           })(done);
         });
       });
 
+      // TODO: Better to use describeModes() here.
+      describe('called from the chain variable directly', function() {
+        it('should works for simple calls', function(done) {
+          var chain = this.jam(this.jam.identity);
+          var callback = chain.promise();
 
+          callback();
+          chain(done);
+        });
+
+        it('should pass callback arguments to the next step', function(done) {
+          var chain = this.jam(this.jam.identity);
+          var callback = chain.promise();
+
+          callback(null, 'hello', 'world');
+          chain(function(next, arg1, arg2) {
+            assert.equal(arg1, 'hello');
+            assert.equal(arg2, 'world');
+            next();
+          })(done);
+        });
+      });
     }); // .promise
 
     describe('iterable functions', function() {
